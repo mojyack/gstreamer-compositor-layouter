@@ -154,6 +154,7 @@ auto CompositorLayouter::remove_src(const Source* const source_ptr, const std::f
         }
     }
     assert_n(source);
+    layout_sources();
 
     const auto args = new CompositorSinkBlockCallbackData{
         .self                = this,
