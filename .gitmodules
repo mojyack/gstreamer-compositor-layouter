@@ -1,0 +1,9 @@
+[submodule "submodules/cutil-macros"]
+	path = submodules/cutil-macros
+	url = https://github.com/mojyack/cutil-macros.git
+[submodule "submodules/cutil"]
+	path = submodules/cutil
+	url = https://github.com/mojyack/cutil.git
+[submodule "submodules/gstreamer-utils"]
+	path = submodules/gstreamer-utils
+	url = https://github.com/mojyack/gstreamer-utils.git
