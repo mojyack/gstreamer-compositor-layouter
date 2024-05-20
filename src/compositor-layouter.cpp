@@ -175,6 +175,9 @@ auto CompositorLayouter::layout_sources() -> void {
             valid_sources.push_back(source.get());
         }
     }
+    if(valid_sources.empty()) {
+        return;
+    }
 
     // calculate average resolution
     auto average_resolution = std::array{0.0, 0.0};
