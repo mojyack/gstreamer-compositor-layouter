@@ -207,7 +207,7 @@ auto CompositorLayouter::layout_sources() -> void {
                          "height", int(height),
                          NULL);
             if(verbose) {
-                PRINT("source ", &source, ": layout at pos=(", xpos, ",", ypos, ") size=(", width, ",", height, ")");
+                PRINT("source ", &source, ": layout at pos=(", int(xpos), ",", int(ypos), ") size=(", int(width), ",", int(height), ")");
             }
         }
     }
