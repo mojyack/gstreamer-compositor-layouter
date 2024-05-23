@@ -24,7 +24,7 @@ struct CompositorLayouter {
 
     std::vector<std::unique_ptr<Source>> sources;
 
-    auto add_src(AutoGstObject<GstPad> upstream_pad) -> Source*;
+    auto add_src(AutoGstObject<GstPad> upstream_pad, bool mute) -> Source*;
     auto mute_unmute_src(Source* source_ptr, bool mute) -> void;
     auto remove_src(const Source* const source_ptr, const std::function<void(GstPad*)> pad_delete_callback) -> void;
     auto layout_sources() -> void;

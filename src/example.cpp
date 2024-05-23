@@ -49,7 +49,7 @@ auto manage() -> bool {
         // add sources
         for(auto& source : sources) {
             unwrap_pb_mut(videotestsrc, add_new_element_to_pipeine(pipeline.get(), "videotestsrc"));
-            unwrap_pb_mut(src, layouter.add_src(gst_element_get_static_pad(&videotestsrc, "src")));
+            unwrap_pb_mut(src, layouter.add_src(gst_element_get_static_pad(&videotestsrc, "src"), false));
             assert_b(gst_element_sync_state_with_parent(&videotestsrc) == TRUE);
             source = &src;
             std::this_thread::sleep_for(delay);

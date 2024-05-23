@@ -103,7 +103,7 @@ auto compositor_sink_block_callback(GstPad* const /*pad*/, GstPadProbeInfo* cons
 }
 } // namespace
 
-auto CompositorLayouter::add_src(AutoGstObject<GstPad> upstream_pad) -> Source* {
+auto CompositorLayouter::add_src(AutoGstObject<GstPad> upstream_pad, bool mute) -> Source* {
     // generate new pad name
     auto sink_name = std::array<char, 16>();
     snprintf(sink_name.data(), sink_name.size(), "sink_%u", sink_id_serial.fetch_add(1));
@@ -122,7 +122,7 @@ auto CompositorLayouter::add_src(AutoGstObject<GstPad> upstream_pad) -> Source* 
         .compositor_pad = std::move(compositor_pad),
         .width          = -1,
         .height         = -1,
-        .muted          = false,
+        .muted          = mute,
     };
     sources.emplace_back(source_ptr);
     auto& source = *source_ptr;
@@ -158,7 +158,9 @@ auto CompositorLayouter::mute_unmute_src(Source* const source_ptr, const bool mu
                  "alpha", mute ? 0.0 : 1.0,
                  NULL);
     source.muted = mute;
-    layout_sources();
+    if(source.width != -1 && source.height != -1) {
+        layout_sources();
+    }
 }
 
 auto CompositorLayouter::remove_src(const Source* const source_ptr, const std::function<void(GstPad*)> pad_delete_callback) -> void {
