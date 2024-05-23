@@ -11,8 +11,9 @@ struct CompositorLayouter {
         AutoGstObject<GstPad> upstream_pad;
         AutoGstObject<GstPad> compositor_pad;
 
-        int width;
-        int height;
+        int  width;
+        int  height;
+        bool muted;
     };
 
     GstElement*      compositor;
@@ -24,6 +25,7 @@ struct CompositorLayouter {
     std::vector<std::unique_ptr<Source>> sources;
 
     auto add_src(AutoGstObject<GstPad> upstream_pad) -> Source*;
+    auto mute_unmute_src(Source* source_ptr, bool mute) -> void;
     auto remove_src(const Source* const source_ptr, const std::function<void(GstPad*)> pad_delete_callback) -> void;
     auto layout_sources() -> void;
 

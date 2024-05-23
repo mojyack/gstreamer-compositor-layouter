@@ -57,6 +57,18 @@ auto manage() -> bool {
 
         std::this_thread::sleep_for(delay);
 
+        // mute
+        for(const auto source : sources) {
+            layouter.mute_unmute_src(source, true);
+            std::this_thread::sleep_for(delay / 2);
+        }
+
+        // unmute
+        for(const auto source : sources) {
+            layouter.mute_unmute_src(source, false);
+            std::this_thread::sleep_for(delay / 2);
+        }
+
         // removing an element from a live pipeline is hard...
         auto delete_ready      = Event();
         auto element_to_delete = (GstElement*)(nullptr);

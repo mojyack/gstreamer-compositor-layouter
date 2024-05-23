@@ -117,6 +117,7 @@ auto CompositorLayouter::add_src(AutoGstObject<GstPad> upstream_pad) -> Source* 
         .compositor_pad = std::move(compositor_pad),
         .width          = -1,
         .height         = -1,
+        .muted          = false,
     };
     sources.emplace_back(source_ptr);
     auto& source = *source_ptr;
@@ -129,7 +130,9 @@ auto CompositorLayouter::add_src(AutoGstObject<GstPad> upstream_pad) -> Source* 
         if(verbose) {
             PRINT("source ", &source, ": size=(", source.width, ",", source.height, ")");
         }
-        layout_sources();
+        if(!source.muted) {
+            layout_sources();
+        }
         return CapsEventHandlerResult::Continue;
     };
 
@@ -144,6 +147,15 @@ auto CompositorLayouter::add_src(AutoGstObject<GstPad> upstream_pad) -> Source* 
     return &source;
 }
 
+auto CompositorLayouter::mute_unmute_src(Source* const source_ptr, const bool mute) -> void {
+    auto& source = *source_ptr;
+    g_object_set(source.compositor_pad.get(),
+                 "alpha", mute ? 0.0 : 1.0,
+                 NULL);
+    source.muted = mute;
+    layout_sources();
+}
+
 auto CompositorLayouter::remove_src(const Source* const source_ptr, const std::function<void(GstPad*)> pad_delete_callback) -> void {
     auto source = std::unique_ptr<Source>();
     for(auto i = sources.begin(); i != sources.end(); i += 1) {
@@ -154,7 +166,9 @@ auto CompositorLayouter::remove_src(const Source* const source_ptr, const std::f
         }
     }
     assert_n(source);
-    layout_sources();
+    if(!source->muted) {
+        layout_sources();
+    }
 
     const auto args = new CompositorSinkBlockCallbackData{
         .self                = this,
@@ -171,7 +185,7 @@ auto CompositorLayouter::remove_src(const Source* const source_ptr, const std::f
 auto CompositorLayouter::layout_sources() -> void {
     auto valid_sources = std::vector<Source*>();
     for(auto& source : sources) {
-        if(source->width != -1 && source->height != -1) {
+        if(source->width != -1 && source->height != -1 && !source->muted) {
             valid_sources.push_back(source.get());
         }
     }
