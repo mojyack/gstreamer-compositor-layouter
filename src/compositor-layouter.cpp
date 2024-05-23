@@ -40,10 +40,15 @@ auto install_caps_event_probe(GstPad* const pad, const CapsEventHandler handler)
                 return GST_PAD_PROBE_REMOVE;
             }
         }
+
+        static auto destory(const gpointer data) -> void {
+            const auto context = std::bit_cast<Context*>(data);
+            delete context;
+        }
     };
 
     auto context = new Context{.handler = handler};
-    gst_pad_add_probe(pad, GST_PAD_PROBE_TYPE_EVENT_DOWNSTREAM, Callbacks::on_pad_probe, context, NULL);
+    gst_pad_add_probe(pad, GST_PAD_PROBE_TYPE_EVENT_DOWNSTREAM, Callbacks::on_pad_probe, context, Callbacks::destory);
 }
 
 auto get_width_and_height_from_caps(GstCaps* const caps) -> std::optional<std::pair<int, int>> {
