@@ -182,7 +182,7 @@ auto CompositorLayouter::remove_src(const Source* const source_ptr, const std::f
         .source              = std::move(source),
         .pad_delete_callback = pad_delete_callback,
     };
-    gst_pad_add_probe(args->source->compositor_pad.get(),
+    gst_pad_add_probe(args->source->upstream_pad.get(),
                       GST_PAD_PROBE_TYPE_IDLE,
                       GstPadProbeCallback(compositor_sink_block_callback),
                       args,
