@@ -1,3 +1,5 @@
+#include <optional>
+
 #include "compositor-layouter.hpp"
 
 #include "macros/autoptr.hpp"
